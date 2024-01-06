@@ -17,7 +17,7 @@ class Sentence {
 class Spoiler {
   // field
   String input = '';
-  List<Sentence> alt;
+  List<Sentence> alt = [];
   // constructor
   Spoiler();
 }
