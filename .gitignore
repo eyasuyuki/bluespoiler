@@ -28,3 +28,6 @@ doc/api/
 
 # JetBrains
 .idea
+
+# lint log
+*.log

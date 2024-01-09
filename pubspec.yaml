@@ -34,6 +34,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.1
+  # riverpod
+  flutter_riverpod:
+  riverpod_annotation:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -44,7 +47,11 @@ dev_dependencies:
     sdk: flutter
   # build_runner
   build_runner:
+  # i18n
   intl_translation:
+  # riverpod
+  riverpod_generator:
+  riverpod_lint:
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
