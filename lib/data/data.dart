@@ -60,7 +60,8 @@ class Spoiler {
     int lastIndex = 0;
     for (Pair p in brackets) {
       if (p.start > lastIndex) {
-        alt.add(Sentence(text: _input.substring(lastIndex, p.start)));
+        int top = lastIndex > 0 ? lastIndex+1 : lastIndex;
+        alt.add(Sentence(text: _input.substring(top, p.start)));
       }
       String text = _input.substring(p.start+1, p.end);
       alt.add(Sentence(text: _removeBrackets(text), isSecret: true));
