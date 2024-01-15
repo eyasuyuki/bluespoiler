@@ -7,4 +7,4 @@ import '../data/data.dart';
 part 'spoiler_notifier.g.dart';
 
 @riverpod
-Spoiler spoiler(SpoilerRef ref, String input) => Spoiler(input: input);
+String filledText(FilledTextRef ref) => '';
