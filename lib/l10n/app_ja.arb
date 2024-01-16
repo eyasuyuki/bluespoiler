@@ -1,4 +1,10 @@
 {
   "@@locale": "ja",
-  "input_hint_text": "ネタバレALT"
+  "description": "画像のALTでネタバレPost",
+  "help": "[と]で囲われた文字が○になります",
+  "hidden_char": "○",
+  "ellipsis": "…",
+  "input_hint_text": "ネタバレALT",
+  "open_bracket_input_text": "[を入力",
+  "close_bracket_input_text": "]を入力"
 }

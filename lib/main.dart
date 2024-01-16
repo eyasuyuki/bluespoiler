@@ -74,61 +74,92 @@ class _Page extends HookWidget {
   final String title;
   @override
   Widget build(BuildContext context) {
+    // style
+    final buttonStyle = ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
+    // spoiler
     final Spoiler spoiler = Spoiler();
+    // hidden char
+    final hiddenChar = AppLocalizations.of(context)!.hidden_char.runes.first;
+    // text edit
     final filledText = useState<String>('');
     final inputController = useTextEditingController();
     inputController.addListener(() {
       spoiler.setInput(inputController.text);
-      filledText.value = spoiler.alt.map((e) => e.fill(0x2a)).join('');
+      filledText.value = spoiler.postText(
+          hiddenChar,
+          AppLocalizations.of(context)!.ellipsis);
     });
+    // focus node
+    final focusNode = useFocusNode();
+
+    void insertTextAtCursorPosition(String text) {
+      final currentText = inputController.text;
+      final cursorPosition = inputController.selection.baseOffset;
+
+      // 現在のカーソル位置に文字を挿入
+      final newText = currentText.substring(0, cursorPosition) +
+          text +
+          currentText.substring(cursorPosition);
+
+      // テキストを更新
+      inputController.text = newText;
+
+      // カーソル位置を更新
+      inputController.selection =
+          TextSelection.collapsed(offset: cursorPosition + text.length);
+
+      // ボタンが押された後にTextFieldにフォーカスをセット
+      FocusScope.of(context).requestFocus(focusNode);
+    }
 
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(this.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Container(
+        padding: EdgeInsets.all(5.0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
+          //mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Text(AppLocalizations.of(context)!.description,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            Text(AppLocalizations.of(context)!.help),
             TextFormField(
               keyboardType: TextInputType.multiline,
               maxLength: 1000,
               maxLines: 10,
+              autofocus: true,
               controller: inputController,
+              focusNode: focusNode,
               decoration: InputDecoration(
+                counterText: '',
                 hintText: AppLocalizations.of(context)!.input_hint_text,
                 border: const OutlineInputBorder()
               ),
             ),
+            Row(
+              children: [
+                ElevatedButton(onPressed: () {
+                  insertTextAtCursorPosition('[');
+                },
+                    child: Text(AppLocalizations.of(context)!.open_bracket_input_text)
+                ),
+                ElevatedButton(onPressed: () {
+                  insertTextAtCursorPosition(']');
+                },
+                    child: Text(AppLocalizations.of(context)!.close_bracket_input_text)
+                )
+              ],
+            ),
             Text(
               '${filledText.value}',
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),
-      ),
-      // floatingActionButton: FloatingActionButton(
+      ),// floatingActionButton: FloatingActionButton(
       //   onPressed: _incrementCounter,
       //   tooltip: 'Increment',
       //   child: const Icon(Icons.add),

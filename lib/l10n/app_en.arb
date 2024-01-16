@@ -1,4 +1,10 @@
 {
     "@@locale": "en",
-    "input_hint_text": "Spoiler ALT text"
+    "description": "Post spoiler text by image ALT",
+    "help": "Asterisk text with [ and ]",
+    "hidden_char": "*",
+    "ellipsis": "...",
+    "input_hint_text": "Spoiler ALT text",
+    "open_bracket_input_text": "input [",
+    "close_bracket_input_text": "input ]"
 }

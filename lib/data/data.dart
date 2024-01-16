@@ -25,6 +25,7 @@ class Pair {
 }
 
 class Spoiler {
+  final max = 300;
   // field
   String _input = '';
   List<Sentence> alt = [];
@@ -56,12 +57,10 @@ class Spoiler {
         stack.removeLast();
       }
     }
-
-    int lastIndex = 0;
+    int lastIndex = -1;
     for (Pair p in brackets) {
       if (p.start > lastIndex) {
-        int top = lastIndex > 0 ? lastIndex+1 : lastIndex;
-        alt.add(Sentence(text: _input.substring(top, p.start)));
+        alt.add(Sentence(text: _input.substring(lastIndex+1, p.start)));
       }
       String text = _input.substring(p.start+1, p.end);
       alt.add(Sentence(text: _removeBrackets(text), isSecret: true));
@@ -70,6 +69,15 @@ class Spoiler {
     if (lastIndex < _input.length) {
       alt.add(Sentence(text: _input.substring(lastIndex+1)));
     }
+  }
+
+  String postText(int ch, String ellipsis) {
+    var text = alt.map((e) => e.fill(ch)).join('');
+    if (text.length <= max) {
+      return text;
+    }
+    var body = text.substring(0, (max - ellipsis.length));
+    return body + ellipsis;
   }
 
   // remove brackets
