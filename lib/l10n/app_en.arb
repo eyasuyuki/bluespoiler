@@ -6,5 +6,8 @@
     "ellipsis": "...",
     "input_hint_text": "Spoiler ALT text",
     "open_bracket_input_text": "input [",
-    "close_bracket_input_text": "input ]"
+    "close_bracket_input_text": "input ]",
+    "image_button_text": "Pick image",
+    "close_hint_text": "Dispose",
+    "post_button_text": "Post"
 }
