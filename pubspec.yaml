@@ -34,17 +34,27 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.1
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
   # riverpod
   flutter_riverpod:
   riverpod_annotation:
   # hooks
   flutter_hooks:
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  # bluesky
   bluesky: ^0.15.4
+  # image picker web
   image_picker_web: ^3.1.1
+  # flutter login
+  flutter_login: ^5.0.0
+  # go router
+  go_router: ^13.0.1
+  # freezed
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+  # secure storage
+  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +66,9 @@ dev_dependencies:
   # riverpod
   riverpod_generator:
   riverpod_lint:
+  # freezed
+  freezed: ^2.4.6
+  json_serializable: ^6.7.1
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
