@@ -9,5 +9,11 @@
     "close_bracket_input_text": "input ]",
     "image_button_text": "Pick image",
     "close_hint_text": "Dispose",
+    "email_input_label": "Email",
+    "password_input_label": "Password",
+    "email_error_text": "Bad Email",
+    "verify_button_text": "Verify",
+    "login_success_text": "Login successes",
+    "login_failed_text": "Login failed",
     "post_button_text": "Post"
 }

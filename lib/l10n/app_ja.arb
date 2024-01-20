@@ -8,5 +8,10 @@
   "open_bracket_input_text": "[を入力",
   "close_bracket_input_text": "]を入力",
   "image_button_text": "画像選択",
-  "close_hint_text": "削除"
+  "close_hint_text": "削除",
+  "password_input_label": "パスワード",
+  "email_error_text": "Emailが不正です",
+  "verify_button_text": "テストログイン",
+  "login_success_text": "テストログインに成功しました",
+  "login_failed_text": "ログインできませんでした"
 }

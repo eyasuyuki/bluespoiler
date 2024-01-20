@@ -1,40 +1,54 @@
 import 'dart:typed_data';
 
-import 'package:bluespoiler/model/article.dart';
+import 'package:mime_type/mime_type.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:go_router/go_router.dart';
+import 'package:path/path.dart' as Path;
 import 'package:image_picker_web/image_picker_web.dart';
+import 'package:bluesky/bluesky.dart' as bsky;
 
 import '../data/data.dart';
 
 class SpoilerEditor extends HookWidget {
+  static const idKey = 'ID_KEY';
+  static const passwordKey = 'PASSWORD_KEY';
+
   const SpoilerEditor({super.key, required this.title});
 
   final String title;
 
   @override
   Widget build(BuildContext context) {
-    // style
-    final buttonStyle = ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
+    // key
+    final _key = GlobalKey<FormState>();
     // spoiler
     final Spoiler spoiler = Spoiler();
+    // localizations
     // hidden char
     final hiddenChar = AppLocalizations.of(context)!.hidden_char.runes.first;
     // ellipsis
     final ellipsis = AppLocalizations.of(context)!.ellipsis;
+    // use
     // text edit
     final filledText = useState<String>('');
+    // input controller
     final inputController = useTextEditingController();
     inputController.addListener(() {
       spoiler.setInput(inputController.text);
       filledText.value = spoiler.postText(hiddenChar, AppLocalizations.of(context)!.ellipsis);
     });
+    // email controller
+    final emailController = useTextEditingController();
+    // password controller
+    final passwordController = useTextEditingController();
     // focus node
     final focusNode = useFocusNode();
     // image bytes
     final imageBytes = useState<Uint8List?>(null);
+    // mimeType
+    final mimeType = useState<String?>(null);
 
     void insertTextAtCursorPosition(String text) {
       final currentText = inputController.text;
@@ -56,6 +70,8 @@ class SpoilerEditor extends HookWidget {
     Future<void> pickImage() async {
       try {
         Uint8List? uint8list = await ImagePickerWeb.getImageAsBytes();
+        //final info = await ImagePickerWeb.getImageInfo;
+        //mimeType.value = mime(Path.basename(info!.fileName!));
         imageBytes.value = uint8list;
       } catch (e) {
         print(e);
@@ -119,6 +135,53 @@ class SpoilerEditor extends HookWidget {
                       await pickImage();
                     },
                     child: Text(AppLocalizations.of(context)!.image_button_text)),
+            // form
+            Form(
+              key: _key,
+              autovalidateMode: AutovalidateMode.always,
+              child: AutofillGroup(
+                child: Column(
+                  children: [
+                    // Email
+                    TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.email_input_label,
+                      ),
+                      validator: (value) {
+                        if ((value == null) || !EmailValidator.validate(value)) {
+                          return AppLocalizations.of(context)!.email_error_text;
+                        }
+                        return null;
+                      },
+                      controller: emailController,
+                    ),
+                    // Password
+                    TextFormField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.password_input_label,
+                      ),
+                      controller: passwordController,
+                    ),
+                    // test connection
+                    TextButton(
+                        onPressed: () async {
+                          try {
+                            final session = await bsky.createSession(identifier: emailController.text, password: passwordController.text);
+                            final snackBar = SnackBar(content: Text(AppLocalizations.of(context)!.login_success_text));
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          } catch (e) {
+                            final snackBar = SnackBar(backgroundColor: Colors.redAccent, content: Text(AppLocalizations.of(context)!.login_failed_text));
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            print(e.toString());
+                          }
+                        },
+                        child: Text(AppLocalizations.of(context)!.verify_button_text)),
+                  ],
+                ),
+              ),
+            ),
             const Padding(padding: EdgeInsets.all(7.0)),
             SizedBox(
               width: double.infinity,
@@ -126,15 +189,31 @@ class SpoilerEditor extends HookWidget {
                 onPressed: (inputController.text.isEmpty || imageBytes.value == null)
                     ? null
                     : () async {
-                      spoiler.setInput(inputController.text);
-                      final body = spoiler.postText(hiddenChar, ellipsis);
-                      final alt = spoiler.alt.map((e) => e.text).join('');
-                      final article = Article(body: body, alt: alt, image: imageBytes.value);
-                        context.push('/login', extra: article);
+                        spoiler.setInput(inputController.text);
+                        final body = spoiler.postText(hiddenChar, ellipsis);
+                        final alt = spoiler.alt.map((e) => e.text).join('');
+                        final session = await bsky.createSession(
+                            identifier: emailController.text,
+                            password: passwordController.text
+                        );
+                        final bluesky = bsky.Bluesky.fromSession(session.data);
+                        final uploaded = await bluesky.repo.uploadBlob(imageBytes.value!);
+                        final post = bluesky.feed.post(
+                            text: body,
+                          embed: bsky.Embed.images(
+                              data: bsky.EmbedImages(
+                                 images: [
+                                   bsky.Image(
+                                     alt: alt,
+                                     image: uploaded.data.blob,
+                                   ),
+                                 ],
+                              )),
+                        );
                       },
                 child: Text(AppLocalizations.of(context)!.post_button_text),
               ),
-            )
+            ),
           ],
         ),
       ),
