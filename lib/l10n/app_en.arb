@@ -15,5 +15,6 @@
     "verify_button_text": "Verify",
     "login_success_text": "Login successes",
     "login_failed_text": "Login failed",
-    "post_button_text": "Post"
+    "post_button_text": "Post",
+    "post_success_text": "Post successes"
 }

@@ -210,6 +210,8 @@ class SpoilerEditor extends HookWidget {
                                  ],
                               )),
                         );
+                        final snackBar = SnackBar(content: Text(AppLocalizations.of(context)!.post_success_text));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       },
                 child: Text(AppLocalizations.of(context)!.post_button_text),
               ),

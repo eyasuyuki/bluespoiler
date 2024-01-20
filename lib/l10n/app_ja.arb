@@ -15,5 +15,6 @@
   "verify_button_text": "テストログイン",
   "login_success_text": "テストログインに成功しました",
   "login_failed_text": "ログインできませんでした",
-  "post_button_text": "Post"
+  "post_button_text": "Post",
+  "post_success_text": "Postが成功しました"
 }
