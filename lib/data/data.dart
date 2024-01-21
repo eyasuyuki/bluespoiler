@@ -19,9 +19,8 @@ class Pair {
   // field
   int start = 0;
   int end = 0;
-  int depth = 0;
   // constructor
-  Pair({this.start = 0, this.end=0, this.depth = 0});
+  Pair({this.start = 0, this.end=0});
 }
 
 class Spoiler {
@@ -52,7 +51,7 @@ class Spoiler {
             //continue;
           }
         }
-        Pair p = Pair(start: start, end: i, depth: stack.length);
+        Pair p = Pair(start: start, end: i);
         brackets.add(p);
         stack.removeLast();
       }
