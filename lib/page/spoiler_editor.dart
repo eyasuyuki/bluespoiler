@@ -137,7 +137,7 @@ class SpoilerEditor extends HookWidget {
                     child: Text(AppLocalizations.of(context)!.image_button_text)),
             // form
             Form(
-              key: _key,
+              //key: _key,
               autovalidateMode: AutovalidateMode.always,
               child: AutofillGroup(
                 child: Column(
