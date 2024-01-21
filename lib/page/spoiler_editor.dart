@@ -191,26 +191,34 @@ class SpoilerEditor extends HookWidget {
                   onPressed: (inputController.text.isEmpty || imageBytes.value == null)
                       ? null
                       : () async {
-                          spoiler.setInput(inputController.text);
-                          final body = spoiler.postText(hiddenChar, ellipsis);
-                          final alt = spoiler.alt.map((e) => e.text).join('');
-                          final session = await bsky.createSession(identifier: emailController.text, password: passwordController.text);
-                          final bluesky = bsky.Bluesky.fromSession(session.data);
-                          final uploaded = await bluesky.repo.uploadBlob(imageBytes.value!);
-                          final post = bluesky.feed.post(
-                            text: body,
-                            embed: bsky.Embed.images(
-                                data: bsky.EmbedImages(
-                              images: [
-                                bsky.Image(
-                                  alt: alt,
-                                  image: uploaded.data.blob,
-                                ),
-                              ],
-                            )),
-                          );
-                          final snackBar = SnackBar(content: Text(AppLocalizations.of(context)!.post_success_text));
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          try {
+                            spoiler.setInput(inputController.text);
+                            final body = spoiler.postText(hiddenChar, ellipsis);
+                            final alt = spoiler.alt.map((e) => e.text).join('');
+                            final session = await bsky.createSession(identifier: emailController.text, password: passwordController.text);
+                            final bluesky = bsky.Bluesky.fromSession(session.data);
+                            final uploaded = await bluesky.repo.uploadBlob(imageBytes.value!);
+                            final post = await bluesky.feed.post(
+                              text: body,
+                              embed: bsky.Embed.images(
+                                  data: bsky.EmbedImages(
+                                    images: [
+                                      bsky.Image(
+                                        alt: alt,
+                                        image: uploaded.data.blob,
+                                      ),
+                                    ],
+                                  )),
+                            );
+                            final snackBar = SnackBar(content: Text(AppLocalizations.of(context)!.post_success_text+': '+post.toString()));
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          } catch (e) {
+                            final snackBar = SnackBar(
+                              backgroundColor: Colors.redAccent,
+                              content: Text(AppLocalizations.of(context)!.post_failed_text+': '+e.toString())
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          }
                         },
                   child: Text(AppLocalizations.of(context)!.post_button_text),
                 ),
