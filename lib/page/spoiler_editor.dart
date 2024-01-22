@@ -1,15 +1,13 @@
 import 'dart:typed_data';
 
-import 'package:mime_type/mime_type.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:path/path.dart' as Path;
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:bluesky/bluesky.dart' as bsky;
 
-import '../data/data.dart';
+import 'package:bluespoiler/data/data.dart';
 
 class SpoilerEditor extends HookWidget {
   static const idKey = 'ID_KEY';
@@ -21,8 +19,6 @@ class SpoilerEditor extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // key
-    final _key = GlobalKey<FormState>();
     // spoiler
     final Spoiler spoiler = Spoiler();
     // localizations
@@ -31,8 +27,11 @@ class SpoilerEditor extends HookWidget {
     // ellipsis
     final ellipsis = AppLocalizations.of(context)!.ellipsis;
     // use
+    // image bytes
+    final imageBytes = useState<Uint8List?>(null);
     // text edit
     final filledText = useState<String>('');
+    // text editing controllers
     // input controller
     final inputController = useTextEditingController();
     inputController.addListener(() {
@@ -45,10 +44,6 @@ class SpoilerEditor extends HookWidget {
     final passwordController = useTextEditingController();
     // focus node
     final focusNode = useFocusNode();
-    // image bytes
-    final imageBytes = useState<Uint8List?>(null);
-    // mimeType
-    final mimeType = useState<String?>(null);
 
     void insertTextAtCursorPosition(String text) {
       final currentText = inputController.text;
@@ -68,11 +63,19 @@ class SpoilerEditor extends HookWidget {
     }
 
     Future<void> pickImage() async {
+      const maxImageSize = 999997;
       try {
         Uint8List? uint8list = await ImagePickerWeb.getImageAsBytes();
-        //final info = await ImagePickerWeb.getImageInfo;
-        //mimeType.value = mime(Path.basename(info!.fileName!));
-        imageBytes.value = uint8list;
+        if (uint8list!.lengthInBytes > maxImageSize) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.image_size_text),
+              backgroundColor: Colors.redAccent,
+            ),
+          );
+        } else {
+          imageBytes.value = uint8list;
+        }
       } catch (e) {
         print(e);
       }
@@ -170,12 +173,22 @@ class SpoilerEditor extends HookWidget {
                       TextButton(
                           onPressed: () async {
                             try {
-                              final session = await bsky.createSession(identifier: emailController.text, password: passwordController.text);
-                              final snackBar = SnackBar(content: Text(AppLocalizations.of(context)!.login_success_text));
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              final session = await bsky.createSession(
+                                  identifier: emailController.text,
+                                  password: passwordController.text
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(AppLocalizations.of(context)!.login_success_text)
+                                  )
+                              );
                             } catch (e) {
-                              final snackBar = SnackBar(backgroundColor: Colors.redAccent, content: Text(AppLocalizations.of(context)!.login_failed_text));
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      backgroundColor: Colors.redAccent,
+                                      content: Text(AppLocalizations.of(context)!.login_failed_text)
+                                  )
+                              );
                               print(e.toString());
                             }
                           },
@@ -210,14 +223,17 @@ class SpoilerEditor extends HookWidget {
                                     ],
                                   )),
                             );
-                            final snackBar = SnackBar(content: Text(AppLocalizations.of(context)!.post_success_text+': '+post.toString()));
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          } catch (e) {
-                            final snackBar = SnackBar(
-                              backgroundColor: Colors.redAccent,
-                              content: Text(AppLocalizations.of(context)!.post_failed_text+': '+e.toString())
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(AppLocalizations.of(context)!.post_success_text)
+                                )
                             );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                backgroundColor: Colors.redAccent,
+                                content: Text(AppLocalizations.of(context)!.post_failed_text+': '+e.toString())
+                            ));
                           }
                         },
                   child: Text(AppLocalizations.of(context)!.post_button_text),
