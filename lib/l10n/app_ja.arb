@@ -8,6 +8,7 @@
   "open_bracket_input_text": "[を入力",
   "close_bracket_input_text": "]を入力",
   "image_button_text": "画像選択",
+  "image_size_text": "画像サイズが976.56KBを超えています",
   "close_hint_text": "削除",
   "email_input_label": "Email",
   "password_input_label": "パスワード",
@@ -16,5 +17,6 @@
   "login_success_text": "テストログインに成功しました",
   "login_failed_text": "ログインできませんでした",
   "post_button_text": "Post",
-  "post_success_text": "Postが成功しました"
+  "post_success_text": "Postが成功しました",
+  "post_failed_text": "Postに失敗しました"
 }

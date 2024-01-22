@@ -8,6 +8,7 @@
     "open_bracket_input_text": "input [",
     "close_bracket_input_text": "input ]",
     "image_button_text": "Pick image",
+    "image_size_text": "Image size exceeded 976.56KB",
     "close_hint_text": "Dispose",
     "email_input_label": "Email",
     "password_input_label": "Password",
@@ -16,5 +17,6 @@
     "login_success_text": "Login successes",
     "login_failed_text": "Login failed",
     "post_button_text": "Post",
-    "post_success_text": "Post successes"
+    "post_success_text": "Post successes",
+    "post_failed_text": "Post failed"
 }
