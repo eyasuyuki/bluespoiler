@@ -23,6 +23,8 @@ class Uint8ListConverter implements JsonConverter<Uint8List?, List<int>?> {
 @freezed
 class Article with _$Article {
   const factory Article({
+    required String id,
+    required String password,
     required String body,
     required String alt,
     @Uint8ListConverter() Uint8List? image,

@@ -1,4 +1,3 @@
-import 'package:bluespoiler/page/login_screen.dart';
 import 'package:bluespoiler/page/spoiler_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,12 +16,12 @@ final _router = GoRouter(
         return const SpoilerEditor(title: 'BlueSpoiler');
       },
     ),
-    GoRoute(
-      path: '/login',
-      builder: (BuildContext context, GoRouterState state) {
-        return LoginScreen(article: state.extra as Article);
-      },
-    )
+    // GoRoute(
+    //   path: '/login',
+    //   builder: (BuildContext context, GoRouterState state) {
+    //     return LoginScreen(article: state.extra as Article);
+    //   },
+    // )
   ],
 );
 

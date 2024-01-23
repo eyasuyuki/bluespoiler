@@ -20,6 +20,8 @@ Article _$ArticleFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Article {
+  String get id => throw _privateConstructorUsedError;
+  String get password => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
   String get alt => throw _privateConstructorUsedError;
   @Uint8ListConverter()
@@ -35,7 +37,12 @@ abstract class $ArticleCopyWith<$Res> {
   factory $ArticleCopyWith(Article value, $Res Function(Article) then) =
       _$ArticleCopyWithImpl<$Res, Article>;
   @useResult
-  $Res call({String body, String alt, @Uint8ListConverter() Uint8List? image});
+  $Res call(
+      {String id,
+      String password,
+      String body,
+      String alt,
+      @Uint8ListConverter() Uint8List? image});
 }
 
 /// @nodoc
@@ -51,11 +58,21 @@ class _$ArticleCopyWithImpl<$Res, $Val extends Article>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
+    Object? password = null,
     Object? body = null,
     Object? alt = null,
     Object? image = freezed,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
       body: null == body
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
@@ -79,7 +96,12 @@ abstract class _$$ArticleImplCopyWith<$Res> implements $ArticleCopyWith<$Res> {
       __$$ArticleImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String body, String alt, @Uint8ListConverter() Uint8List? image});
+  $Res call(
+      {String id,
+      String password,
+      String body,
+      String alt,
+      @Uint8ListConverter() Uint8List? image});
 }
 
 /// @nodoc
@@ -93,11 +115,21 @@ class __$$ArticleImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
+    Object? password = null,
     Object? body = null,
     Object? alt = null,
     Object? image = freezed,
   }) {
     return _then(_$ArticleImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
       body: null == body
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
@@ -118,13 +150,19 @@ class __$$ArticleImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ArticleImpl implements _Article {
   const _$ArticleImpl(
-      {required this.body,
+      {required this.id,
+      required this.password,
+      required this.body,
       required this.alt,
       @Uint8ListConverter() this.image});
 
   factory _$ArticleImpl.fromJson(Map<String, dynamic> json) =>
       _$$ArticleImplFromJson(json);
 
+  @override
+  final String id;
+  @override
+  final String password;
   @override
   final String body;
   @override
@@ -135,7 +173,7 @@ class _$ArticleImpl implements _Article {
 
   @override
   String toString() {
-    return 'Article(body: $body, alt: $alt, image: $image)';
+    return 'Article(id: $id, password: $password, body: $body, alt: $alt, image: $image)';
   }
 
   @override
@@ -143,6 +181,9 @@ class _$ArticleImpl implements _Article {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ArticleImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.password, password) ||
+                other.password == password) &&
             (identical(other.body, body) || other.body == body) &&
             (identical(other.alt, alt) || other.alt == alt) &&
             const DeepCollectionEquality().equals(other.image, image));
@@ -150,8 +191,8 @@ class _$ArticleImpl implements _Article {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, body, alt, const DeepCollectionEquality().hash(image));
+  int get hashCode => Object.hash(runtimeType, id, password, body, alt,
+      const DeepCollectionEquality().hash(image));
 
   @JsonKey(ignore: true)
   @override
@@ -169,12 +210,18 @@ class _$ArticleImpl implements _Article {
 
 abstract class _Article implements Article {
   const factory _Article(
-      {required final String body,
+      {required final String id,
+      required final String password,
+      required final String body,
       required final String alt,
       @Uint8ListConverter() final Uint8List? image}) = _$ArticleImpl;
 
   factory _Article.fromJson(Map<String, dynamic> json) = _$ArticleImpl.fromJson;
 
+  @override
+  String get id;
+  @override
+  String get password;
   @override
   String get body;
   @override

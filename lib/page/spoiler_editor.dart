@@ -10,9 +10,6 @@ import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:bluespoiler/data/data.dart';
 
 class SpoilerEditor extends HookWidget {
-  static const idKey = 'ID_KEY';
-  static const passwordKey = 'PASSWORD_KEY';
-
   const SpoilerEditor({super.key, required this.title});
 
   final String title;
@@ -21,12 +18,11 @@ class SpoilerEditor extends HookWidget {
   Widget build(BuildContext context) {
     // spoiler
     final Spoiler spoiler = Spoiler();
-    // localizations
     // hidden char
     final hiddenChar = AppLocalizations.of(context)!.hidden_char.runes.first;
     // ellipsis
     final ellipsis = AppLocalizations.of(context)!.ellipsis;
-    // use
+    // useState
     // image bytes
     final imageBytes = useState<Uint8List?>(null);
     // text edit
@@ -142,7 +138,6 @@ class SpoilerEditor extends HookWidget {
                       child: Text(AppLocalizations.of(context)!.image_button_text)),
               // form
               Form(
-                //key: _key,
                 autovalidateMode: AutovalidateMode.always,
                 child: AutofillGroup(
                   child: Column(
