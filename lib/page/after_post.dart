@@ -32,7 +32,7 @@ class AfterPost extends StatelessWidget {
                 ),
                 const Padding(padding: EdgeInsets.all(7.0)),
                 ElevatedButton(
-                  onPressed: () => context.pop(),
+                  onPressed: () => context.go('/', extra: true),
                   child: Text(AppLocalizations.of(context)!.spoil_again_text),
                 ),
               ],

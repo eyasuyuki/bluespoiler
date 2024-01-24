@@ -14,9 +14,10 @@ import 'package:bluespoiler/data/data.dart';
 import '../model/article.dart';
 
 class SpoilerEditor extends HookConsumerWidget {
-  const SpoilerEditor({super.key, required this.title});
+  const SpoilerEditor({super.key, required this.title, this.clearAll = false});
 
   final String title;
+  final bool clearAll;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,6 +45,17 @@ class SpoilerEditor extends HookConsumerWidget {
     final passwordController = useTextEditingController();
     // focus node
     final focusNode = useFocusNode();
+
+    // use effect
+    useEffect(() {
+      if (clearAll) {
+        inputController.clear();
+        imageBytes.value = null;
+        emailController.clear();
+        passwordController.clear();
+      }
+      return null;
+    }, [clearAll]);
 
     void insertTextAtCursorPosition(String text) {
       final currentText = inputController.text;
@@ -201,7 +213,7 @@ class SpoilerEditor extends HookConsumerWidget {
                                 ))
                                 .future);
                             //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.post_success_text)));
-                            context.push('/after_post', extra: result);
+                            context.go('/after_post', extra: result);
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 backgroundColor: Colors.redAccent, content: Text(AppLocalizations.of(context)!.post_failed_text + ': ' + e.toString())));

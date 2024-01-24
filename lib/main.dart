@@ -12,11 +12,12 @@ const title = 'BlueSpoiler';
 
 final _router = GoRouter(
   initialLocation: '/',
+  initialExtra: false,
   routes: <RouteBase>[
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
-        return const SpoilerEditor(title: title);
+        return SpoilerEditor(title: title, clearAll: state.extra as bool);
       },
     ),
      GoRoute(
