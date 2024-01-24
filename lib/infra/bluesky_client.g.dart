@@ -6,7 +6,7 @@ part of 'bluesky_client.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$testLoginHash() => r'97698389764f9acf0ea2255d1c2016990e2e51f7';
+String _$testLoginHash() => r'90202dd7aaff6497e636e4a1616640b28b41d3ab';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -171,7 +171,7 @@ class _TestLoginProviderElement extends AutoDisposeFutureProviderElement<bool>
   String get password => (origin as TestLoginProvider).password;
 }
 
-String _$postArticleHash() => r'33095a70eff51d8ae285e9c2f396987cc44ca5ad';
+String _$postArticleHash() => r'8f094f82601141bf01e62307f4b077cbb5835946';
 
 /// See also [postArticle].
 @ProviderFor(postArticle)

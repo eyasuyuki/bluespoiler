@@ -45,8 +45,19 @@ Future<PostResult> postArticle(PostArticleRef ref, {required Article article}) a
             ],
           )),
     );
+    final articleId = post.data.uri.href.split('/').last;
+    final url = Uri(
+      scheme: 'https',
+      host: 'bsky.app',
+      pathSegments: <String>[
+        'profile',
+        session.data.handle,
+        'post',
+        articleId,
+      ],
+    );
     return PostResult(
-        url: post.data.uri.toString(),
+        url: url.toString(),
         status: post.status.name,
     );
   } catch (e) {

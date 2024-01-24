@@ -1,3 +1,4 @@
+import 'package:bluespoiler/page/after_post.dart';
 import 'package:bluespoiler/page/spoiler_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -5,7 +6,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'model/article.dart';
+import 'model/post_result.dart';
+
+const title = 'BlueSpoiler';
 
 final _router = GoRouter(
   initialLocation: '/',
@@ -13,15 +16,15 @@ final _router = GoRouter(
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
-        return const SpoilerEditor(title: 'BlueSpoiler');
+        return const SpoilerEditor(title: title);
       },
     ),
-    // GoRoute(
-    //   path: '/login',
-    //   builder: (BuildContext context, GoRouterState state) {
-    //     return LoginScreen(article: state.extra as Article);
-    //   },
-    // )
+     GoRoute(
+       path: '/after_post',
+       builder: (BuildContext context, GoRouterState state) {
+         return AfterPost(title: title, postResult: state.extra as PostResult);
+       },
+     )
   ],
 );
 
