@@ -1,32 +1,33 @@
 import 'dart:typed_data';
 
+import 'package:bluespoiler/infra/bluesky_client.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker_web/image_picker_web.dart';
-import 'package:bluesky/bluesky.dart' as bsky;
 
 import 'package:bluespoiler/data/data.dart';
 
-class SpoilerEditor extends HookWidget {
-  static const idKey = 'ID_KEY';
-  static const passwordKey = 'PASSWORD_KEY';
+import '../model/article.dart';
 
-  const SpoilerEditor({super.key, required this.title});
+class SpoilerEditor extends HookConsumerWidget {
+  const SpoilerEditor({super.key, required this.title, this.clearAll = false});
 
   final String title;
+  final bool clearAll;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // spoiler
     final Spoiler spoiler = Spoiler();
-    // localizations
     // hidden char
     final hiddenChar = AppLocalizations.of(context)!.hidden_char.runes.first;
     // ellipsis
     final ellipsis = AppLocalizations.of(context)!.ellipsis;
-    // use
+    // useState
     // image bytes
     final imageBytes = useState<Uint8List?>(null);
     // text edit
@@ -44,6 +45,17 @@ class SpoilerEditor extends HookWidget {
     final passwordController = useTextEditingController();
     // focus node
     final focusNode = useFocusNode();
+
+    // use effect
+    useEffect(() {
+      if (clearAll) {
+        inputController.clear();
+        imageBytes.value = null;
+        emailController.clear();
+        passwordController.clear();
+      }
+      return null;
+    }, [clearAll]);
 
     void insertTextAtCursorPosition(String text) {
       final currentText = inputController.text;
@@ -142,7 +154,6 @@ class SpoilerEditor extends HookWidget {
                       child: Text(AppLocalizations.of(context)!.image_button_text)),
               // form
               Form(
-                //key: _key,
                 autovalidateMode: AutovalidateMode.always,
                 child: AutofillGroup(
                   child: Column(
@@ -172,25 +183,10 @@ class SpoilerEditor extends HookWidget {
                       // test connection
                       TextButton(
                           onPressed: () async {
-                            try {
-                              final session = await bsky.createSession(
-                                  identifier: emailController.text,
-                                  password: passwordController.text
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(AppLocalizations.of(context)!.login_success_text)
-                                  )
-                              );
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      backgroundColor: Colors.redAccent,
-                                      content: Text(AppLocalizations.of(context)!.login_failed_text)
-                                  )
-                              );
-                              print(e.toString());
-                            }
+                            await ref.read(testLoginProvider.call(email: emailController.text, password: passwordController.text).future)
+                                ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.login_success_text)))
+                                : ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(backgroundColor: Colors.redAccent, content: Text(AppLocalizations.of(context)!.login_failed_text)));
                           },
                           child: Text(AppLocalizations.of(context)!.verify_button_text)),
                     ],
@@ -204,36 +200,23 @@ class SpoilerEditor extends HookWidget {
                   onPressed: (inputController.text.isEmpty || imageBytes.value == null)
                       ? null
                       : () async {
+                          spoiler.setInput(inputController.text);
                           try {
-                            spoiler.setInput(inputController.text);
-                            final body = spoiler.postText(hiddenChar, ellipsis);
-                            final alt = spoiler.alt.map((e) => e.text).join('');
-                            final session = await bsky.createSession(identifier: emailController.text, password: passwordController.text);
-                            final bluesky = bsky.Bluesky.fromSession(session.data);
-                            final uploaded = await bluesky.repo.uploadBlob(imageBytes.value!);
-                            final post = await bluesky.feed.post(
-                              text: body,
-                              embed: bsky.Embed.images(
-                                  data: bsky.EmbedImages(
-                                    images: [
-                                      bsky.Image(
-                                        alt: alt,
-                                        image: uploaded.data.blob,
-                                      ),
-                                    ],
-                                  )),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text(AppLocalizations.of(context)!.post_success_text)
-                                )
-                            );
+                            final result = await ref.read(postArticleProvider
+                                .call(
+                                    article: Article(
+                                  id: emailController.text,
+                                  password: passwordController.text,
+                                  body: spoiler.postText(hiddenChar, ellipsis),
+                                  alt: spoiler.alt.map((e) => e.text).join(''),
+                                  image: imageBytes.value,
+                                ))
+                                .future);
+                            //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.post_success_text)));
+                            context.go('/after_post', extra: result);
                           } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                backgroundColor: Colors.redAccent,
-                                content: Text(AppLocalizations.of(context)!.post_failed_text+': '+e.toString())
-                            ));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                backgroundColor: Colors.redAccent, content: Text(AppLocalizations.of(context)!.post_failed_text + ': ' + e.toString())));
                           }
                         },
                   child: Text(AppLocalizations.of(context)!.post_button_text),

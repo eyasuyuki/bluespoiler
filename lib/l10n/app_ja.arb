@@ -18,5 +18,6 @@
   "login_failed_text": "ログインできませんでした",
   "post_button_text": "Post",
   "post_success_text": "Postが成功しました",
-  "post_failed_text": "Postに失敗しました"
+  "post_failed_text": "Postに失敗しました",
+  "spoil_again_text": "別のネタバレを投稿する"
 }
