@@ -188,7 +188,8 @@ class SpoilerEditor extends HookConsumerWidget {
                                 : ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(backgroundColor: Colors.redAccent, content: Text(AppLocalizations.of(context)!.login_failed_text)));
                           },
-                          child: Text(AppLocalizations.of(context)!.verify_button_text)),
+                          child: Text(AppLocalizations.of(context)!.verify_button_text),
+                      ),
                     ],
                   ),
                 ),
