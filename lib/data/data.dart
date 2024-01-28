@@ -15,12 +15,14 @@ class Sentence {
 }
 
 // pair of brackets
-class Pair {
+class Region {
   // field
   int start = 0;
   int end = 0;
+  int byteStart = 0;
+  int byteEnd = 0;
   // constructor
-  Pair({this.start = 0, this.end=0});
+  Region({this.start = 0, this.end = 0, this.byteStart = 0, this.byteEnd = 0});
 }
 
 class Spoiler {
@@ -37,7 +39,7 @@ class Spoiler {
     _input = input;
     alt = [];
     List<int> stack = []; // list of '[' positions
-    List<Pair> brackets = []; // list of bracket pairs
+    List<Region> brackets = []; // list of bracket pairs
 
     for (int i = 0; i < _input.length; i++) {
       if (input[i] == '[') {
@@ -45,19 +47,19 @@ class Spoiler {
       } else if (_input[i] == ']' && stack.isNotEmpty) {
         int start = stack.last;
         if (brackets.isNotEmpty) {
-          Pair prev = brackets.last;
+          Region prev = brackets.last;
           if (start < prev.start && i > prev.end) {
             brackets.removeLast();
             //continue;
           }
         }
-        Pair p = Pair(start: start, end: i);
+        Region p = Region(start: start, end: i);
         brackets.add(p);
         stack.removeLast();
       }
     }
     int lastIndex = -1;
-    for (Pair p in brackets) {
+    for (Region p in brackets) {
       if (p.start > lastIndex) {
         alt.add(Sentence(text: _input.substring(lastIndex+1, p.start)));
       }

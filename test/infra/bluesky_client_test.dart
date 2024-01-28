@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'package:bluesky/bluesky.dart';
 import 'package:bluespoiler/data/data.dart';
 import 'package:bluespoiler/infra/bluesky_client.dart';
 import 'package:bluespoiler/model/article.dart';
@@ -54,10 +55,41 @@ void main() async {
     expect(result.url, isNotNull);
   });
 
-  test('test extractUrl', () {
-    List<Pair> result = extractUrl('あああ https://hoge.com/fuga いいい http://example.com/bbb/ccc?ddd=fff&ggg=123 ううう');
-    expect(result, isNotNull);
-    result = extractUrl('あああああああああああいいいいいいいいいいい言うううううううううう');
-    expect(result, isEmpty);
+  test('test extractUrl and createFacets', () {
+    final input1 = 'あああ https://hoge.com/fuga いいい http://example.com/bbb/ccc?ddd=fff&ggg=123 ううう';
+    List<Region> urls = extractUrl(input1);
+    expect(urls, isNotNull);
+    List<Facet> facets = createFacets(input1, urls);
+    expect(facets, isNotEmpty);
+    expect(
+        facets,
+        [
+          Facet(
+            index: ByteSlice(byteStart: 10, byteEnd: 31),
+            features: [
+              FacetFeature.link(
+                  data: FacetLink(
+                    uri: 'https://hoge.com/fuga',
+                  ),
+              ),
+            ].toList(),
+          ),
+          Facet(
+              index: ByteSlice(byteStart: 42, byteEnd: 84),
+              features: [
+                FacetFeature.link(
+                    data: FacetLink(
+                        uri: 'http://example.com/bbb/ccc?ddd=fff&ggg=123'),
+                ),
+              ].toList(),
+          ),
+        ].toList(),
+    );
+
+    final input2 = 'あああああああああああいいいいいいいいいいいうううううううううう';
+    urls = extractUrl(input2);
+    expect(urls, isEmpty);
+    facets = createFacets(input2, urls);
+    expect(facets, isEmpty);
   });
 }
