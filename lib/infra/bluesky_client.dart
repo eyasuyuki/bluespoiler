@@ -1,7 +1,8 @@
-
+import 'dart:convert';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:bluesky/bluesky.dart' as bsky;
 
+import '../data/data.dart';
 import '../model/article.dart';
 import '../model/post_result.dart';
 
@@ -44,6 +45,7 @@ Future<PostResult> postArticle(PostArticleRef ref, {required Article article}) a
               ),
             ],
           )),
+      facets: createFacets(article.body, extractUrl(article.body)),
     );
     final articleId = post.data.uri.href.split('/').last;
     final url = Uri(
@@ -63,4 +65,44 @@ Future<PostResult> postArticle(PostArticleRef ref, {required Article article}) a
   } catch (e) {
     rethrow;
   }
+}
+
+List<Region> extractUrl(String input) {
+  final _regexp = RegExp(r'https?://[^\s]*');
+  final matched = _regexp.allMatches(input);
+  return matched.map((e) => Region(start: e.start, end: e.end)).toList();
+}
+
+List<bsky.Facet> createFacets(String input, List<Region> urls) {
+  urls = toByteIndices(input, urls);
+  return urls.map((e) => bsky.Facet(
+    index: bsky.ByteSlice(
+        byteStart: e.byteStart,
+        byteEnd: e.byteEnd,
+    ),
+    features: [
+      bsky.FacetFeature.link(
+          data: bsky.FacetLink(
+              uri: input.substring(e.start, e.end),
+          ),
+      ),
+    ],
+  )).toList();
+}
+
+List<Region> toByteIndices(String input, List<Region> pairs) {
+  int byteIndex = 0;
+  int prevBytes = 0;
+  for (int i = 0; i < input.length; i++) {
+    byteIndex += prevBytes;
+    for (var p in pairs) {
+      if (i == p.start) {
+        p.byteStart = byteIndex;
+      } else if (i == p.end) {
+        p.byteEnd = byteIndex;
+      }
+    }
+    prevBytes = utf8.encode(input[i]).length;
+  }
+  return pairs;
 }
