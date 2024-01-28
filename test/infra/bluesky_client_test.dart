@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'package:bluespoiler/data/data.dart';
 import 'package:bluespoiler/infra/bluesky_client.dart';
 import 'package:bluespoiler/model/article.dart';
 import 'package:bluespoiler/model/post_result.dart';
@@ -51,5 +52,12 @@ void main() async {
     expect(result, isNotNull);
     expect(result.status, equals('ok'));
     expect(result.url, isNotNull);
+  });
+
+  test('test extractUrl', () {
+    List<Pair> result = extractUrl('あああ https://hoge.com/fuga いいい http://example.com/bbb/ccc?ddd=fff&ggg=123 ううう');
+    expect(result, isNotNull);
+    result = extractUrl('あああああああああああいいいいいいいいいいい言うううううううううう');
+    expect(result, isEmpty);
   });
 }

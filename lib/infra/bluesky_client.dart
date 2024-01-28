@@ -2,6 +2,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:bluesky/bluesky.dart' as bsky;
 
+import '../data/data.dart';
 import '../model/article.dart';
 import '../model/post_result.dart';
 
@@ -44,6 +45,7 @@ Future<PostResult> postArticle(PostArticleRef ref, {required Article article}) a
               ),
             ],
           )),
+      facets: createFacets(article.body, extractUrl(article.body)),
     );
     final articleId = post.data.uri.href.split('/').last;
     final url = Uri(
@@ -63,4 +65,31 @@ Future<PostResult> postArticle(PostArticleRef ref, {required Article article}) a
   } catch (e) {
     rethrow;
   }
+}
+
+List<Pair> extractUrl(String input) {
+  List<Pair> result = [];
+  final _regexp = RegExp(r'https?://[^\s]*');
+  final matched = _regexp.allMatches(input);
+  matched.forEach((element) {
+    result.add(Pair(start: element.start, end: element.end));
+  });
+
+  return result;
+}
+
+List<bsky.Facet> createFacets(String input, List<Pair> urls) {
+  return urls.map((e) => bsky.Facet(
+    index: bsky.ByteSlice(
+        byteStart: e.start,
+        byteEnd: e.end
+    ),
+    features: [
+      bsky.FacetFeature.link(
+          data: bsky.FacetLink(
+              uri: input.substring(e.start, e.end),
+          ),
+      ),
+    ],
+  )).toList();
 }
