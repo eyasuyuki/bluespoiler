@@ -17,7 +17,7 @@ class AfterPost extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(title),
+        title: SelectableText(title),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -25,7 +25,7 @@ class AfterPost extends StatelessWidget {
           child: Center(
             child: Column(
               children: [
-                Text(AppLocalizations.of(context)!.post_success_text),
+                SelectableText(AppLocalizations.of(context)!.post_success_text),
                 TextButton(
                   onPressed: () => launchUrlString(postResult.url),
                   child: Text(postResult.url),
@@ -34,6 +34,16 @@ class AfterPost extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () => context.go('/', extra: true),
                   child: Text(AppLocalizations.of(context)!.spoil_again_text),
+                ),
+                const Padding(padding: EdgeInsets.all(7.0)),
+                Row(
+                  children: [
+                    SelectableText(AppLocalizations.of(context)!.copyright_text),
+                    TextButton(
+                      onPressed: () => launchUrlString(AppLocalizations.of(context)!.sponsor_url),
+                      child: Text(AppLocalizations.of(context)!.sponsor_text),
+                    ),
+                  ],
                 ),
               ],
             ),

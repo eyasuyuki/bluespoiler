@@ -19,5 +19,8 @@
     "post_button_text": "Post",
     "post_success_text": "Post successes",
     "post_failed_text": "Post failed",
-    "spoil_again_text": "Edit another spoiler"
+    "spoil_again_text": "Edit another spoiler",
+    "copyright_text": "Copyright©︎2024 Yasuyuki ENDO",
+    "sponsor_url": "https://github.com/sponsors/eyasuyuki",
+    "sponsor_text": "Buy me a Coffee☕️ or Beer🍺"
 }

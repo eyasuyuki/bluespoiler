@@ -19,5 +19,8 @@
   "post_button_text": "Post",
   "post_success_text": "Postが成功しました",
   "post_failed_text": "Postに失敗しました",
-  "spoil_again_text": "別のネタバレを投稿する"
+  "spoil_again_text": "別のネタバレを投稿する",
+  "copyright_text": "Copyright©︎2024 Yasuyuki ENDO",
+  "sponsor_url": "https://github.com/sponsors/eyasuyuki",
+  "sponsor_text": "Buy me a Coffee☕️ or Beer🍺"
 }
