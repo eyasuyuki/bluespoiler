@@ -10,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 
 import 'package:bluespoiler/data/data.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../model/article.dart';
 
@@ -96,7 +97,7 @@ class SpoilerEditor extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(title),
+        title: SelectableText(title),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -104,11 +105,11 @@ class SpoilerEditor extends HookConsumerWidget {
           padding: const EdgeInsets.all(5.0),
           child: Column(
             children: [
-              Text(
+              SelectableText(
                 AppLocalizations.of(context)!.description,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
-              Text(AppLocalizations.of(context)!.help),
+              SelectableText(AppLocalizations.of(context)!.help),
               TextFormField(
                 keyboardType: TextInputType.multiline,
                 maxLength: 1000,
@@ -132,7 +133,7 @@ class SpoilerEditor extends HookConsumerWidget {
                       child: Text(AppLocalizations.of(context)!.close_bracket_input_text))
                 ],
               ),
-              Text(
+              SelectableText(
                 filledText.value,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
@@ -213,7 +214,6 @@ class SpoilerEditor extends HookConsumerWidget {
                                   image: imageBytes.value,
                                 ))
                                 .future);
-                            //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.post_success_text)));
                             context.go('/after_post', extra: result);
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -222,6 +222,16 @@ class SpoilerEditor extends HookConsumerWidget {
                         },
                   child: Text(AppLocalizations.of(context)!.post_button_text),
                 ),
+              ),
+              const Padding(padding: EdgeInsets.all(7.0)),
+              Row(
+                children: [
+                  SelectableText(AppLocalizations.of(context)!.copyright_text),
+                  TextButton(
+                    onPressed: () => launchUrlString(AppLocalizations.of(context)!.sponsor_url),
+                    child: Text(AppLocalizations.of(context)!.sponsor_text),
+                  ),
+                ],
               ),
             ],
           ),
