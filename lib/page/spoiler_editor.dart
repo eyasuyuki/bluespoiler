@@ -10,6 +10,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 
 import 'package:bluespoiler/data/data.dart';
+import 'package:language_picker/language_picker_dialog.dart';
+import 'package:language_picker/language_picker_dropdown.dart';
+import 'package:language_picker/languages.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../model/article.dart';
@@ -22,6 +25,7 @@ class SpoilerEditor extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final locale = Localizations.localeOf(context);
     // spoiler
     final Spoiler spoiler = Spoiler();
     // hidden char
@@ -31,6 +35,8 @@ class SpoilerEditor extends HookConsumerWidget {
     // useState
     // image bytes
     final imageBytes = useState<Uint8List?>(null);
+    // language
+    final postLanguage = useState<String>(locale.languageCode);
     // text edit
     final filledText = useState<String>('');
     // text editing controllers
@@ -130,7 +136,20 @@ class SpoilerEditor extends HookConsumerWidget {
                       onPressed: () {
                         insertTextAtCursorPosition(']');
                       },
-                      child: Text(AppLocalizations.of(context)!.close_bracket_input_text))
+                      child: Text(AppLocalizations.of(context)!.close_bracket_input_text)),
+                  const Padding(padding: EdgeInsets.all(7.0)),
+                  Expanded(
+                    child: SizedBox(
+                      height: 20,
+                      child: LanguagePickerDropdown(
+                        initialValue: Language.fromIsoCode(postLanguage.value),
+                        onValuePicked: (Language language) {
+                          postLanguage.value = language.isoCode;
+                        },
+                      ),
+                    ),
+                  ),
+
                 ],
               ),
               SelectableText(
@@ -207,17 +226,18 @@ class SpoilerEditor extends HookConsumerWidget {
                             final result = await ref.read(postArticleProvider
                                 .call(
                                     article: Article(
-                                  id: emailController.text,
-                                  password: passwordController.text,
-                                  body: spoiler.postText(hiddenChar, ellipsis),
-                                  alt: spoiler.alt.map((e) => e.text).join(''),
-                                  image: imageBytes.value,
-                                ))
-                                .future);
+                                      id: emailController.text,
+                                      password: passwordController.text,
+                                      body: spoiler.postText(hiddenChar, ellipsis),
+                                      lang: postLanguage.value,
+                                      alt: spoiler.alt.map((e) => e.text).join(''),
+                                      image: imageBytes.value,
+                                  ),
+                            ).future);
                             context.go('/after_post', extra: result);
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                backgroundColor: Colors.redAccent, content: Text(AppLocalizations.of(context)!.post_failed_text + ': ' + e.toString())));
+                                backgroundColor: Colors.redAccent, content: Text('${AppLocalizations.of(context)!.post_failed_text}: $e')));
                           }
                         },
                   child: Text(AppLocalizations.of(context)!.post_button_text),

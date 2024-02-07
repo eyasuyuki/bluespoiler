@@ -41,7 +41,13 @@ void main() async {
     final file = File('assets/test.jpg');
     final img = await file.readAsBytes();
     // test loading
-    Article article = Article(id: id, password: password, body: '画像投稿テスト', alt: 'テストの文字列', image: img);
+    Article article = Article(
+        id: id,
+        password: password,
+        body: '画像投稿テスト',
+        lang: 'ja',
+        alt: 'テストの文字列',
+        image: img);
 
     // test loading
     expect(
@@ -56,7 +62,7 @@ void main() async {
   });
 
   test('test extractUrl and createFacets', () {
-    final input1 = 'あああ https://hoge.com/fuga いいい http://example.com/bbb/ccc?ddd=fff&ggg=123 ううう';
+    const input1 = 'あああ https://hoge.com/fuga いいい http://example.com/bbb/ccc?ddd=fff&ggg=123 ううう';
     List<Region> urls = extractUrl(input1);
     expect(urls, isNotNull);
     List<Facet> facets = createFacets(input1, urls);
@@ -65,9 +71,9 @@ void main() async {
         facets,
         [
           Facet(
-            index: ByteSlice(byteStart: 10, byteEnd: 31),
+            index: const ByteSlice(byteStart: 10, byteEnd: 31),
             features: [
-              FacetFeature.link(
+              const FacetFeature.link(
                   data: FacetLink(
                     uri: 'https://hoge.com/fuga',
                   ),
@@ -75,9 +81,9 @@ void main() async {
             ].toList(),
           ),
           Facet(
-              index: ByteSlice(byteStart: 42, byteEnd: 84),
+              index: const ByteSlice(byteStart: 42, byteEnd: 84),
               features: [
-                FacetFeature.link(
+                const FacetFeature.link(
                     data: FacetLink(
                         uri: 'http://example.com/bbb/ccc?ddd=fff&ggg=123'),
                 ),
@@ -86,7 +92,7 @@ void main() async {
         ].toList(),
     );
 
-    final input2 = 'あああああああああああいいいいいいいいいいいうううううううううう';
+    const input2 = 'あああああああああああいいいいいいいいいいいうううううううううう';
     urls = extractUrl(input2);
     expect(urls, isEmpty);
     facets = createFacets(input2, urls);

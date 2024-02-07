@@ -26,6 +26,7 @@ class Article with _$Article {
     required String id,
     required String password,
     required String body,
+    required String lang,
     required String alt,
     @Uint8ListConverter() Uint8List? image,
   }) = _Article;

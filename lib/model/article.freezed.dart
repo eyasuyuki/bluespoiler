@@ -12,7 +12,7 @@ part of 'article.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Article _$ArticleFromJson(Map<String, dynamic> json) {
   return _Article.fromJson(json);
@@ -23,6 +23,7 @@ mixin _$Article {
   String get id => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
+  String get lang => throw _privateConstructorUsedError;
   String get alt => throw _privateConstructorUsedError;
   @Uint8ListConverter()
   Uint8List? get image => throw _privateConstructorUsedError;
@@ -41,6 +42,7 @@ abstract class $ArticleCopyWith<$Res> {
       {String id,
       String password,
       String body,
+      String lang,
       String alt,
       @Uint8ListConverter() Uint8List? image});
 }
@@ -61,6 +63,7 @@ class _$ArticleCopyWithImpl<$Res, $Val extends Article>
     Object? id = null,
     Object? password = null,
     Object? body = null,
+    Object? lang = null,
     Object? alt = null,
     Object? image = freezed,
   }) {
@@ -76,6 +79,10 @@ class _$ArticleCopyWithImpl<$Res, $Val extends Article>
       body: null == body
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
+              as String,
+      lang: null == lang
+          ? _value.lang
+          : lang // ignore: cast_nullable_to_non_nullable
               as String,
       alt: null == alt
           ? _value.alt
@@ -100,6 +107,7 @@ abstract class _$$ArticleImplCopyWith<$Res> implements $ArticleCopyWith<$Res> {
       {String id,
       String password,
       String body,
+      String lang,
       String alt,
       @Uint8ListConverter() Uint8List? image});
 }
@@ -118,6 +126,7 @@ class __$$ArticleImplCopyWithImpl<$Res>
     Object? id = null,
     Object? password = null,
     Object? body = null,
+    Object? lang = null,
     Object? alt = null,
     Object? image = freezed,
   }) {
@@ -133,6 +142,10 @@ class __$$ArticleImplCopyWithImpl<$Res>
       body: null == body
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
+              as String,
+      lang: null == lang
+          ? _value.lang
+          : lang // ignore: cast_nullable_to_non_nullable
               as String,
       alt: null == alt
           ? _value.alt
@@ -153,6 +166,7 @@ class _$ArticleImpl implements _Article {
       {required this.id,
       required this.password,
       required this.body,
+      required this.lang,
       required this.alt,
       @Uint8ListConverter() this.image});
 
@@ -166,6 +180,8 @@ class _$ArticleImpl implements _Article {
   @override
   final String body;
   @override
+  final String lang;
+  @override
   final String alt;
   @override
   @Uint8ListConverter()
@@ -173,7 +189,7 @@ class _$ArticleImpl implements _Article {
 
   @override
   String toString() {
-    return 'Article(id: $id, password: $password, body: $body, alt: $alt, image: $image)';
+    return 'Article(id: $id, password: $password, body: $body, lang: $lang, alt: $alt, image: $image)';
   }
 
   @override
@@ -185,13 +201,14 @@ class _$ArticleImpl implements _Article {
             (identical(other.password, password) ||
                 other.password == password) &&
             (identical(other.body, body) || other.body == body) &&
+            (identical(other.lang, lang) || other.lang == lang) &&
             (identical(other.alt, alt) || other.alt == alt) &&
             const DeepCollectionEquality().equals(other.image, image));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, password, body, alt,
+  int get hashCode => Object.hash(runtimeType, id, password, body, lang, alt,
       const DeepCollectionEquality().hash(image));
 
   @JsonKey(ignore: true)
@@ -213,6 +230,7 @@ abstract class _Article implements Article {
       {required final String id,
       required final String password,
       required final String body,
+      required final String lang,
       required final String alt,
       @Uint8ListConverter() final Uint8List? image}) = _$ArticleImpl;
 
@@ -224,6 +242,8 @@ abstract class _Article implements Article {
   String get password;
   @override
   String get body;
+  @override
+  String get lang;
   @override
   String get alt;
   @override
