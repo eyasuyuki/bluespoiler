@@ -36,6 +36,9 @@ Future<PostResult> postArticle(PostArticleRef ref, {required Article article}) a
     final uploaded = await bluesky.repo.uploadBlob(article.image!);
     final post = await bluesky.feed.post(
       text: article.body,
+      languageTags: [
+        article.lang,
+      ],
       embed: bsky.Embed.images(
           data: bsky.EmbedImages(
             images: [
@@ -68,8 +71,8 @@ Future<PostResult> postArticle(PostArticleRef ref, {required Article article}) a
 }
 
 List<Region> extractUrl(String input) {
-  final _regexp = RegExp(r'https?://[^\s]*');
-  final matched = _regexp.allMatches(input);
+  final regexp = RegExp(r'https?://[^\s]*');
+  final matched = regexp.allMatches(input);
   return matched.map((e) => Region(start: e.start, end: e.end)).toList();
 }
 
