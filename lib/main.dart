@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 
 import 'model/post_result.dart';
 
-const title = 'BlueSpoiler';
+const title = 'Bluespoiler';
 
 final _router = GoRouter(
   initialLocation: '/',
