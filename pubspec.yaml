@@ -130,6 +130,9 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
+  # generate
+  generate: true
+
 flutter_launcher_icons:
   android: true
   ios: true
@@ -146,6 +149,3 @@ flutter_launcher_icons:
     generate: true
   linux:
     generate: true
-
-  # generate
-  generate: true
