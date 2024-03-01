@@ -65,7 +65,7 @@ void main() async {
     const input1 = 'あああ https://hoge.com/fuga いいい http://example.com/bbb/ccc?ddd=fff&ggg=123 ううう';
     List<Region> urls = extractUrl(input1);
     expect(urls, isNotNull);
-    List<Facet> facets = createFacets(input1, urls);
+    List<Facet> facets = createFacets(input1, urls, []);
     expect(facets, isNotEmpty);
     expect(
         facets,
@@ -95,7 +95,37 @@ void main() async {
     const input2 = 'あああああああああああいいいいいいいいいいいうううううううううう';
     urls = extractUrl(input2);
     expect(urls, isEmpty);
-    facets = createFacets(input2, urls);
+    facets = createFacets(input2, urls, []);
     expect(facets, isEmpty);
+
+    const input3 = 'ああああ #いいい うううう #えええ おおお';
+    List<Region> hashtags = extractHashtag(input3);
+    expect(hashtags, isNotEmpty);
+    expect(hashtags.length, equals(2));
+    facets = createFacets(input3, [], hashtags);
+    expect(facets, isNotEmpty);
+    expect(facets, [
+      Facet(
+        index: const ByteSlice(byteStart: 13, byteEnd: 24),
+        features: [
+          const FacetFeature.tag(
+              data: FacetTag(
+                tag: "#いいい ",
+              ),
+          ),
+        ],
+      ),
+      Facet(
+        index: const ByteSlice(byteStart: 37, byteEnd: 48),
+        features: [
+          const FacetFeature.tag(
+              data: FacetTag(
+                tag: "#えええ ",
+              ),
+          ),
+        ],
+      ),
+    ]);
   });
+
 }
