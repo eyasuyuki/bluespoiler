@@ -106,21 +106,21 @@ void main() async {
     expect(facets, isNotEmpty);
     expect(facets, [
       Facet(
-        index: const ByteSlice(byteStart: 13, byteEnd: 24),
+        index: const ByteSlice(byteStart: 13, byteEnd: 23),
         features: [
           const FacetFeature.tag(
               data: FacetTag(
-                tag: "#いいい ",
+                tag: "#いいい",
               ),
           ),
         ],
       ),
       Facet(
-        index: const ByteSlice(byteStart: 37, byteEnd: 48),
+        index: const ByteSlice(byteStart: 37, byteEnd: 47),
         features: [
           const FacetFeature.tag(
               data: FacetTag(
-                tag: "#えええ ",
+                tag: "#えええ",
               ),
           ),
         ],

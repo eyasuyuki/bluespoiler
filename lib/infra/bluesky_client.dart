@@ -77,7 +77,7 @@ List<Region> extractUrl(String input) {
 }
 
 List<Region> extractHashtag(String input) {
-  final regexp = RegExp(r'(#[^ ]+) ?');
+  final regexp = RegExp(r'(?<=\s|^)#\S+');
   final matched = regexp.allMatches(input);
   return matched.map((e) => Region(start: e.start, end: e.end)).toList();
 }
