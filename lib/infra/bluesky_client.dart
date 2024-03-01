@@ -48,7 +48,7 @@ Future<PostResult> postArticle(PostArticleRef ref, {required Article article}) a
               ),
             ],
           )),
-      facets: createFacets(article.body, extractUrl(article.body)),
+      facets: createFacets(article.body, extractUrl(article.body), extractHashtag(article.body)),
     );
     final articleId = post.data.uri.href.split('/').last;
     final url = Uri(
@@ -76,9 +76,15 @@ List<Region> extractUrl(String input) {
   return matched.map((e) => Region(start: e.start, end: e.end)).toList();
 }
 
-List<bsky.Facet> createFacets(String input, List<Region> urls) {
+List<Region> extractHashtag(String input) {
+  final regexp = RegExp(r'(?<=\s|^)#\S+');
+  final matched = regexp.allMatches(input);
+  return matched.map((e) => Region(start: e.start, end: e.end)).toList();
+}
+
+List<bsky.Facet> createFacets(String input, List<Region> urls, List<Region> hashtags) {
   urls = toByteIndices(input, urls);
-  return urls.map((e) => bsky.Facet(
+  List<bsky.Facet> urlFacets = urls.map((e) => bsky.Facet(
     index: bsky.ByteSlice(
         byteStart: e.byteStart,
         byteEnd: e.byteEnd,
@@ -91,6 +97,24 @@ List<bsky.Facet> createFacets(String input, List<Region> urls) {
       ),
     ],
   )).toList();
+
+  // hashtags
+  hashtags = toByteIndices(input, hashtags);
+  List<bsky.Facet> hashtagFacets = hashtags.map((e) => bsky.Facet(
+    index: bsky.ByteSlice(
+      byteStart: e.byteStart,
+      byteEnd: e.byteEnd,
+    ),
+    features: [
+      bsky.FacetFeature.tag(
+        data: bsky.FacetTag(
+          tag: input.substring(e.start, e.end),
+        ),
+      ),
+    ]
+  )).toList();
+
+  return urlFacets + hashtagFacets;
 }
 
 List<Region> toByteIndices(String input, List<Region> pairs) {

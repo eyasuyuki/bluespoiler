@@ -171,7 +171,7 @@ class _TestLoginProviderElement extends AutoDisposeFutureProviderElement<bool>
   String get password => (origin as TestLoginProvider).password;
 }
 
-String _$postArticleHash() => r'da892dde8011af953019f9ef839f542853e211bf';
+String _$postArticleHash() => r'e0d70c486068c1fc2d2f9d059a3fbcffabec3365';
 
 /// See also [postArticle].
 @ProviderFor(postArticle)
